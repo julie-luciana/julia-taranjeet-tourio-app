@@ -1,8 +1,25 @@
-import { db_places } from "../../../../lib/db_places";
-import { db_comments } from "../../../../lib/db_comments";
+//import { db_places } from "../../../../lib/db_places";
+//import { db_comments } from "../../../../lib/db_comments";
+import dbConnect from "../../../../db/connect";
+import Place from "../../../../db/models/Place";
 
-export default function handler(request, response) {
-  const { id } = request.query;
+
+export default async function handler(request, response) {
+  
+  await dbConnect();
+   const { id } = request.query;
+if (request.method === 'GET') {
+  try {
+    const place = await Place.findById(id);
+    if(!place) return res.status(404).jason({message:'Place not found'});
+    res.status(200).json(place);
+  } catch (error) {
+    response.status(500).json({erorr: 'Not Found'});
+  }
+}
+
+/*
+   const place = await Place.findById(id);
 
   if (!id) {
     return;
@@ -20,4 +37,6 @@ export default function handler(request, response) {
   }
 
   response.status(200).json({ place: place, comments: comments });
+  */
 }
+
