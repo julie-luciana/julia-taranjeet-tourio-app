@@ -1,24 +1,33 @@
+import dbConnect from '../../../../db/connect';  
+import Place from '../../../../db/models/Place'  
 
-//import { db_places } from "../../../../lib/db_places";
-//import { db_comments } from "../../../../lib/db_comments";
-import dbConnect from "../../../../db/connect";
-import Place from "../../../../db/models/Place";
-
-
-export default async function handler(request, response) {
-
+export default async function handler(req, res) {
   await dbConnect();
-  const { id } = request.query;
-   
-    if (request.method === "GET") {
-  
-  try {
-    const place = await Place.findById(id);
-    if (!place) return response.status(404).json({ status: "Not found" });
-    response.staus(200).json(place);
-  } catch (error) {
-    response.status(500).json({error: 'Not Found'});
+  const { id } = req.query;
+
+  if (req.method === 'GET') {
+    try {
+      const place = await Place.findById(id);
+      res.status(200).json(place);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to load place' });
+    }
+  } else if (req.method === 'PATCH') {
+    const updatedPlace = req.body;
+    try {
+      await Place.findByIdAndUpdate(id, updatedPlace);
+      res.status(200).json({ message: 'Place updated successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update place' });
+    }
+  } else if (req.method === 'DELETE') {
+    try {
+      await Place.findByIdAndDelete(id);
+      res.status(200).json({ message: 'Place deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete place' });
+    }
+  } else {
+    res.status(405).json({ message: 'Only GET, PATCH, and DELETE requests allowed' });
   }
 }
-  }
-

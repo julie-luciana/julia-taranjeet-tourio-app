@@ -1,28 +1,48 @@
-import { useRouter } from "next/router";
-import Link from "next/link";
-import useSWR from "swr";
-import Form from "../../../components/Form.js";
-import { StyledLink } from "../../../components/StyledLink.js";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
-export default function EditPage() {
+export default function EditPlace() {
+  const [formData, setFormData] = useState({});
   const router = useRouter();
-  const { isReady } = router;
   const { id } = router.query;
-  const { data: place, isLoading, error } = useSWR(`/api/places/${id}`);
 
-  async function editPlace(place) {
-    console.log("Place edited (but not really...)");
+  useEffect(() => {
+    if (id) {
+      fetch(`/api/places/${id}`)
+        .then(res => res.json())
+        .then(data => setFormData(data));
+    }
+  }, [id]);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const response = await fetch(`/api/places/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      window.location.href = '/';
+    }
   }
 
-  if (!isReady || isLoading || error) return <h2>Loading...</h2>;
-
   return (
-    <>
-      <h2 id="edit-place">Edit Place</h2>
-      <Link href={`/places/${id}`} passHref legacyBehavior>
-        <StyledLink justifySelf="start">back</StyledLink>
-      </Link>
-      <Form onSubmit={editPlace} formName={'edit-place'} defaultData={place} />
-    </>
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={formData.name} 
+      onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+      <input type="text" value={formData.location} 
+      onChange={(e) => setFormData({ ...formData, location: e.target.value })} required />
+      <input type="text" value={formData.image} 
+      onChange={(e) => setFormData({ ...formData, image: e.target.value })} required />
+      <input type="text" value={formData.mapURL} 
+      onChange={(e) => setFormData({ ...formData, mapURL: e.target.value })} required />
+      <textarea value={formData.description} 
+      onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+      <button type="submit">Update Place</button>
+    </form>
   );
 }
