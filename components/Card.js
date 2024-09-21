@@ -3,14 +3,23 @@ import styled from "styled-components";
 import { StyledImage } from "./StyledImage.js";
 
 const Article = styled.article`
-  border: 5px solid black;
-  border-radius: 0.8rem;
+  border: 2px solid black;
+  border-radius: 0.9rem;
   padding: 0.5rem;
 `;
 
 const ImageContainer = styled.div`
-  position: relative;
-  height: 10rem;
+  flex: 1;
+  width: 100%;
+  height: 200px; /* Höhe für größere Bildschirme */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    height: auto; /* Auf kleineren Bildschirmen dynamische Höhe */
+  }
 `;
 
 const Figure = styled.figure`
@@ -49,11 +58,13 @@ export default function Card({ name, image, location, id }) {
         <ImageContainer>
           <StyledImage
             src={image}
-            fill
+            alt={name}
+            layout="responsive" /* Das Layout wird nun responsiv behandelt */
+            width={700} /* Stelle hier eine Breite ein */
+            height={500} /* Stelle hier eine Höhe ein */
             sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 50vw,
-              33vw"
-            alt=""
+                   (max-width: 1200px) 50vw,
+                   33vw"
           />
         </ImageContainer>
         <figcaption>{name}</figcaption>

@@ -6,16 +6,25 @@ import { StyledLink } from "../components/StyledLink.js";
 
 const List = styled.ul`
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* Dynamische Anzahl der Spalten */
+  gap: 1rem; /* Abstand zwischen den Bildern */
   padding-left: 0;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Ein Bild pro Zeile auf kleinen Bildschirmen */
+  }
 `;
 
 const ListItem = styled.li`
   position: relative;
   width: 100%;
+  box-sizing: border-box;
 `;
 const FixedLink = styled(StyledLink)`
   position: fixed;
