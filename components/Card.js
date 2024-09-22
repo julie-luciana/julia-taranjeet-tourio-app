@@ -25,6 +25,18 @@ const ImageContainer = styled.div`
 const Figure = styled.figure`
   position: relative;
   margin: 0;
+  text-align: center;
+`;
+
+const StyledFigcaption = styled.figcaption`
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+`;
+
+const LocationText = styled.p`
+  font-size: 1rem;
+  margin-top: 0.25rem;
 `;
 
 const Anchor = styled.a`
@@ -67,9 +79,9 @@ export default function Card({ name, image, location, id }) {
                    33vw"
           />
         </ImageContainer>
-        <figcaption>{name}</figcaption>
+        <StyledFigcaption>{name}</StyledFigcaption>
+        <LocationText>Location: {location}</LocationText>
       </Figure>
-      <p>Location: {location}</p>
       <Link href={`places/${id}`} passHref legacyBehavior>
         <Anchor>
           <ScreenReaderOnly>More Info</ScreenReaderOnly>
